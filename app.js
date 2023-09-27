@@ -1,13 +1,25 @@
-//const http1 = require("./http.js"); 
-const http1 = require("http");
+const path = require('path');
 
-// function rqListener(req, res){
+const express = require('express');
+const bodyParser = require('body-parser');
 
-// }
-// http1.createServer(rqListener);  
 
-const server  = http1.createServer((req,res)=>{
-    
-    console.log("Nitin Ahuja");
-})
-server.listen(4000);
+
+const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+const errorControler = require('./controllers/error')
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes); 
+
+app.use(errorControler.get404);
+
+app.listen(4000);
